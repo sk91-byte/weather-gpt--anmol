@@ -420,13 +420,6 @@ Demonstrate an alert only when an official/configured source is available
 - [Twilio WhatsApp API](https://www.twilio.com/docs/whatsapp)
 - [WRF official repository](https://github.com/wrf-model/WRF) for future native regional modelling work
 
-## Team and license
-
-**Team:** Add the final team name and member responsibilities here.
-
-**Problem statement:** Smart India Hackathon 2026, WeatherGPT / conversational weather intelligence.
-
-This repository is licensed under the Apache License 2.0. See [LICENSE](LICENSE).
 
 ## Project vision
 
