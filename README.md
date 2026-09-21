@@ -1,345 +1,433 @@
-# 🌤️ Weather GPT — Intelligent Decision-Support & Multilingual Climate Intelligence
+# 🌦️ WeatherGPT
 
-[![Smart India Hackathon 2026](https://img.shields.io/badge/SIH%202026-Problem%20Statement%20%2368-blue?style=for-the-badge&logo=gov.in)](https://sih.gov.in)
-[![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=for-the-badge)](LICENSE)
-[![React 19](https://img.shields.io/badge/React-19.0-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Node.js / Express](https://img.shields.io/badge/Node.js-Express%204.21-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
-[![Gemini 2.5 Flash](https://img.shields.io/badge/Google%20GenAI-Gemini%202.5-8E75B2?style=for-the-badge&logo=google&logoColor=white)](https://ai.google.dev/)
-[![Firebase](https://img.shields.io/badge/Firebase-Firestore%20%26%20Auth-FFA611?style=for-the-badge&logo=firebase&logoColor=black)](https://firebase.google.com/)
-[![Tailwind CSS v4](https://img.shields.io/badge/Tailwind_CSS-v4.0-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-[![PWA Ready](https://img.shields.io/badge/PWA-Offline%20First-5A0FC8?style=for-the-badge&logo=pwa&logoColor=white)](https://web.dev/progressive-web-apps/)
+### Conversational weather intelligence and route-aware decision support for India
 
-> **"Don't Just Know the Weather. Know What to Do."**  
-> An enterprise-grade, conversational climate intelligence platform combining high-resolution Numerical Weather Prediction (NWP) models, real-time Google Search/Maps grounding, turn-by-turn route risk forecasting, and proactive WhatsApp push alerts for rural and urban India.
+[![React](https://img.shields.io/badge/React-19-149eca?logo=react&logoColor=white)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178c6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-6-646cff?logo=vite&logoColor=white)](https://vite.dev/)
+[![Express](https://img.shields.io/badge/Express-4-000000?logo=express&logoColor=white)](https://expressjs.com/)
+[![Gemini](https://img.shields.io/badge/AI-Gemini%202.5%20Flash-4285f4?logo=google)](https://ai.google.dev/)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
 
----
+WeatherGPT turns live weather information into practical answers for citizens, travellers, commuters, farmers, and event planners. A user can ask a question by text or voice, select a language and location, compare weather models, analyse a route, and receive an explanation with recommended actions.
 
-## 📌 1. Overview / Abstract
+The application is designed around one principle:
 
-### The Problem
-Traditional meteorological tools, national dashboards, and consumer weather apps suffer from severe usability and cognitive friction:
-1. **Raw Numerical Overload**: Barometric charts, dew-point tables, and millimeter precipitation graphs overwhelm citizens, farmers, and daily commuters who only need answers to pragmatic questions: *"Can I spray pesticide on my cotton crop today?"*, *"Will highway flooding disrupt my commute to Pune?"*, or *"Is it safe for an outdoor wedding tonight?"*
-2. **Linguistic Exclusion**: Over 70% of India's agrarian workforce relies on regional languages (Hindi, Marathi, Punjabi, Tamil, Telugu, Bengali), whereas standard weather alerts remain predominantly in formal English.
-3. **Passive Observation vs. Active Guidance**: Existing systems passively report the temperature; they do not optimize departure schedules, analyze dynamic highway weather threats, or issue proactive warnings directly through common communication channels like WhatsApp.
+> Weather data should lead to a clear decision, not only a number on a dashboard.
 
-### The Solution: Weather GPT
-**Weather GPT** transforms raw multi-source atmospheric data into instant, context-aware decisions. Powered by **Google Gemini 2.5 Flash** with multi-model fallback cascading (Groq, OpenRouter, OpenAI), the system delivers:
-- Multi-turn voice and text conversations in **12+ Indian languages**.
-- Multi-model **Ensemble NWP forecasting** (ECMWF, GFS, ICON, and IMD) with confidence metrics.
-- Route-level weather risk prediction with an automated **"Should I Leave Now?"** departure optimizer.
-- Direct-to-phone emergency alerts via the **Twilio WhatsApp Business API**.
-- Full **Offline-First PWA** persistence with local Service Worker caches during disaster network blackouts.
+## Contents
 
----
+- [What the application does](#what-the-application-does)
+- [Why it is useful](#why-it-is-useful)
+- [Architecture](#architecture)
+- [Request and decision flow](#request-and-decision-flow)
+- [Feature status](#feature-status)
+- [Technology stack](#technology-stack)
+- [Repository structure](#repository-structure)
+- [Local setup](#local-setup)
+- [Environment variables](#environment-variables)
+- [API surface](#api-surface)
+- [Data credibility and limitations](#data-credibility-and-limitations)
+- [Deployment](#deployment)
+- [Demo flow](#demo-flow)
+- [Roadmap](#roadmap)
+- [References](#references)
 
-## 🚀 2. Key Features
+## What the application does
 
-- 💬 **Conversational Weather Assistant**: Natural language dialogue with role-based personas (*Farmer*, *Commuter*, *Citizen*, *Event Planner*), powered by Google GenAI and Gemini Live WebSocket voice streaming.
-- 🌾 **Smart Agricultural Advisory (Kisan Mode)**: Translates soil moisture, precipitation probability, humidity, and heat stress into actionable crop protection, irrigation, and harvesting advisories.
-- 🚗 **Turn-by-Turn Route Weather Tracking**: Calculates waypoint-specific weather conditions along Indian highways, synchronizing meteorological risk scores with your estimated time of arrival (ETA).
-- ⏱️ **"Should I Leave Now?" Departure Optimizer**: Simulates departure windows (+30 min, +60 min, +120 min) and evaluates road risk indices to avoid traveling through severe monsoon rain or dense winter fog.
-- 🌐 **Grounding with Live Google Search & Maps**: Validates breaking storm bulletins, IMD red/orange warnings, and automatically pinpoints nearby indoor shelters, fuel pumps, and hospitals during severe weather.
-- 📊 **Ensemble NWP Model Comparison**: Side-by-side verification across ECMWF (0.1°), GFS (0.25°), ICON (0.125°), and IMD numerical datasets with algorithmic ensemble consensus scoring.
-- 📲 **Automated WhatsApp Weather Warnings**: Automated push notifications via Twilio whenever user-defined thresholds (e.g., Rain > 15 mm/hr, AQI > 250, Temperature > 42°C) are breached.
-- 📶 **Offline-First PWA Architecture**: Background Service Worker caching guarantees instant access to emergency disaster contacts, first-aid protocols, and saved routes without cellular connectivity.
+### Conversational weather assistant
 
----
+Users can ask questions such as:
 
-## 🧠 3. Technical Approach & Methodology
+- “Will it rain in Delhi today?”
+- “Is it safe to travel from Delhi to Shimla this morning?”
+- “Should I irrigate my crop today?”
+- “What precautions should I take during a thunderstorm?”
 
+The server first collects structured weather context. The AI layer then explains that context in the selected language and user persona. The model is not intended to invent weather observations.
+
+### Route-aware weather intelligence
+
+The route experience supports:
+
+- origin and destination selection;
+- route geometry and travel-time estimates;
+- weather checkpoints along a route;
+- route risk indicators;
+- departure-window comparison;
+- nearby places such as hospitals, petrol pumps, cafés, restaurants, and sheltered stops;
+- map-based route and weather visualisation.
+
+### Multilingual and voice interaction
+
+The application contains a language prompt catalogue for English, Hinglish, and Indian languages. Text responses use the selected language instruction. Voice capabilities depend on the configured Gemini service and the voice packs available in the user’s browser or device.
+
+### Numerical weather model comparison
+
+The NWP view compares model-shaped forecast series such as:
+
+- NOAA GFS;
+- ECMWF IFS;
+- DWD ICON;
+- a multi-model consensus;
+- a WRF-labelled regional comparison series.
+
+See [Data credibility and limitations](#data-credibility-and-limitations) for the important distinction between external model data and locally derived comparison values.
+
+### Alerts and WhatsApp delivery
+
+The project includes an alert-evaluation path and a Twilio WhatsApp service. When Twilio credentials and approved sender configuration are present, the server can evaluate configured thresholds and send alert messages. Without those credentials, the feature remains unavailable and should be shown as unavailable rather than as active.
+
+## Why it is useful
+
+Traditional weather products often make the user interpret several unrelated values. WeatherGPT combines those values with location, route, time, and user role to answer a practical question:
+
+```text
+Raw forecast data
+        ↓
+Location and route context
+        ↓
+Risk and impact interpretation
+        ↓
+Plain-language recommendation
+        ↓
+Text or voice response in the user’s language
 ```
-┌─────────────────┐       ┌────────────────────────┐       ┌──────────────────────┐
-│  Raw Atmospheric│ ----> │ Normalization & Risk   │ ----> │ Context-Injected     │
-│  Data (NWP/APIs)│       │ Vector Synthesis       │       │ LLM Inference Prompt │
-└─────────────────┘       └────────────────────────┘       └──────────────────────┘
-                                                                       │
-                                                                       ▼
-┌─────────────────┐       ┌────────────────────────┐       ┌──────────────────────┐
-│ Final Actionable│ <---- │ Schema Validation &    │ <---- │ Grounding with Live  │
-│ User Advisory   │       │ Language Localization  │       │ Google Search & Maps │
-└─────────────────┘       └────────────────────────┘       └──────────────────────┘
-```
 
-### 3.1. Natural Language Understanding & Dynamic Parameter Extraction
-1. **User Query Normalization**: Queries submitted via voice (Web Audio API / Gemini Multimodal STT) or text are parsed for spatial entities (e.g., *"between Jaipur and Delhi"*), temporal horizons (*"tomorrow evening"*), and sectoral contexts (*"harvesting wheat"*).
-2. **Intent & Parameter Mapping**: The system extracts target coordinates via multi-tier geocoding (GPS pinpointing, TravelTime Geocoding, and Open-Meteo geocoding fallbacks).
+This is decision support. It does not replace official warnings, emergency services, or professional meteorological advice.
 
-### 3.2. Context Synthesis & Risk Index Calculation
-Raw meteorological values (temperature, precipitation rate, wind gusts, AQI PM2.5/PM10, UV index, cloud cover) are synthesized into normalized risk coefficients:
-- **Travel Risk Index (TRI)**: Factors visibility, wet road friction, and gust velocity.
-- **Agricultural Stress Index (ASI)**: Evaluates evapotranspiration rates, soil moisture depletion, and wet-leaf fungal risks.
-- **Health Vulnerability Index (HVI)**: Consolidates air quality index (AQI) with wet-bulb heat stress.
-
-### 3.3. Grounded Prompt Engineering
-The synthesized risk vector, together with user role constraints and live meteorological telemetry, is injected into a strict system prompt:
-```typescript
-// Architectural prompt synthesis example
-const systemPrompt = `
-You are WeatherGPT, an authoritative meteorological decision-support AI for India.
-User Context: Role: ${userRole}, Location: ${city}, Time: ${currentTime}.
-Atmospheric State: Temp: ${temp}°C, Humidity: ${humidity}%, Rain: ${rainProb}%, AQI: ${aqi}.
-NWP Ensemble Consensus: ${ensembleScore}% agreement across ECMWF, GFS, and ICON.
-Output Requirement: Provide 1) Direct answer, 2) Operational Risk Rating (Low/Moderate/Severe),
-3) 3 actionable recommendations tailored specifically to ${userRole}.
-`;
-```
-For breaking bulletins or severe weather events, the query is dispatched with **Google Search Grounding** (`tools: [{ googleSearch: {} }]`) to pull verified warnings directly from IMD and disaster management authorities.
-
----
-
-## 🏗️ 4. System Architecture
-
-WeatherGPT adopts a secure, full-stack micro-service architecture separating client presentation, high-throughput backend orchestration, AI inference cascades, and spatial mapping layers.
+## Architecture
 
 ```mermaid
 flowchart TB
-    subgraph Client ["Client Presentation Layer (React 19 + PWA)"]
-        UI[Tailwind UI & Motion Views]
-        SW[Service Worker / Cache Storage]
-        Voice[Web Audio API / MediaRecorder]
-        Maps[Leaflet & MapLibre GL Renderers]
-    end
+    U[User on phone or desktop]
+    PWA[React 19 + TypeScript + Vite\nResponsive PWA interface]
+    API[Node.js + Express API server\nREST endpoints and WebSocket support]
+    LOC[Location and geocoding\nNominatim, Photon, Open-Meteo]
+    WX[Weather providers\nOpen-Meteo current and forecast data]
+    NWP[NWP comparison\nGFS, ECMWF, ICON and derived comparison series]
+    MAP[Maps and routing\nLeaflet, MapLibre, CARTO, TravelTime]
+    AI[AI orchestration\nGemini, Groq, OpenRouter, OpenAI fallbacks]
+    DB[Firebase Authentication and Firestore\nwhen configured]
+    MSG[Twilio WhatsApp alerts\nwhen configured]
+    OUT[Actionable response\nforecast, risk, route, alert, voice]
 
-    subgraph Gateway ["Backend API Gateway (Express 4 / Node.js)"]
-        Routes["/api/weather/*\n/api/gemini/*\n/api/route/*\n/api/traveltime/*"]
-        WSServer["WebSocket Server (/ws/gemini-live)"]
-        CacheMem[In-Memory Metric Cache]
-    end
-
-    subgraph AI ["AI Processing & Multi-Model Cascade"]
-        GeminiFlash["Primary: Google Gemini 2.5 Flash\n(Multimodal & Grounding)"]
-        Cascade["Fallback Cascade:\nGroq / OpenRouter / OpenAI"]
-        LiveAudio["Gemini Live Bidirectional Audio Stream"]
-    end
-
-    subgraph DataSources ["Meteorological & Spatial Providers"]
-        NWP["Open-Meteo Global Models\n(ECMWF 0.1°, GFS 0.25°, ICON)"]
-        IMD["IMD Radar & Bulletin Ingestion"]
-        Carto["CARTO Basemaps & Vector Tiles"]
-        TravelTime["TravelTime Isochrones & Routing"]
-    end
-
-    subgraph PersistenceServices ["Persistence & Communications"]
-        Firestore[(Firebase Firestore)]
-        Auth[Firebase Authentication]
-        Twilio[Twilio WhatsApp Business API]
-    end
-
-    %% Interactions
-    UI <--> Routes
-    Voice <--> WSServer
-    WSServer <--> LiveAudio
-    Routes --> CacheMem
-    Routes --> GeminiFlash
-    GeminiFlash -. Failover .-> Cascade
-    Routes --> NWP
-    Routes --> IMD
-    Routes --> Carto
-    Routes --> TravelTime
-    Routes <--> Firestore
-    Routes --> Twilio
-    SW -. Offline Cache .-> UI
+    U --> PWA
+    PWA <--> API
+    API --> LOC
+    API --> WX
+    API --> NWP
+    API --> MAP
+    API --> AI
+    API --> DB
+    API --> MSG
+    LOC --> API
+    WX --> API
+    NWP --> API
+    MAP --> API
+    AI --> OUT
+    API --> OUT
+    OUT --> PWA
 ```
 
-### Component Breakdown
-1. **Client Layer**: React 19 SPA running behind Vite 6, styled with Tailwind CSS v4. Features responsive layout containers, hardware-accelerated map viewports, and local state synchronization.
-2. **API Gateway**: Express 4 server on Node.js. Manages rate limits, keeps credentials strictly server-side, orchestrates HTTP and WebSocket connections, and normalizes geospatial formats.
-3. **AI Engine**: `@google/genai` TypeScript SDK interfacing with Gemini 2.5 Flash. Implements function calling, search grounding, maps grounding, and the multi-model cascade engine (`/server/aiModelCascade.ts`).
-4. **Meteorological Core**: Parallel fetch orchestration pulling real-time hourly, 7-day, and NWP ensemble forecasts from Open-Meteo, ECMWF, and regional IMD bulletins.
-5. **Persistence & Alerts**: Cloud Firestore holds user preferences, travel checkpoints, and alert thresholds. Twilio's WhatsApp service handles automated alert delivery.
+### Layer responsibilities
 
----
+| Layer | Responsibility |
+|---|---|
+| Presentation | React screens, map controls, chat, voice controls, loading states, and responsive layouts |
+| Client services | Location, map, trip, NWP, climate, service-worker, and WhatsApp client modules |
+| API server | Express routes, request validation, provider orchestration, WebSocket handling, and secret protection |
+| Weather layer | Live Open-Meteo requests, caching, weather-code interpretation, and forecast context |
+| Model layer | Multi-model forecast retrieval, comparison summaries, divergence indicators, and consensus values |
+| AI layer | Gemini prompt construction and fallback model cascade |
+| Persistence | Firebase Authentication and Firestore when the project is configured for them |
+| Communications | Twilio WhatsApp delivery when credentials and sender approval are available |
 
-## 💻 5. Technology Stack
+## Request and decision flow
 
-| Category | Technologies / Libraries |
-| :--- | :--- |
-| **Frontend Framework** | **React 19.0**, **TypeScript 5.8**, **Vite 6.2** |
-| **UI & Styling** | **Tailwind CSS v4.1**, **Motion (`motion/react`)**, **Lucide Icons** |
-| **Mapping & Geospatial** | **Leaflet 1.9**, **MapLibre GL 4.7**, **CARTO Basemaps**, **TravelTime API** |
-| **Backend & Routing** | **Node.js (ESM/CJS)**, **Express 4.21**, **WebSockets (`ws`)**, **tsx** |
-| **Artificial Intelligence** | **Google GenAI SDK (`@google/genai`)**, **Gemini 2.5 Flash**, **Gemini Live API** |
-| **Model Cascade** | **Groq**, **OpenRouter**, **OpenAI Llama/Qwen Fallbacks** |
-| **Meteorological Data** | **Open-Meteo API**, **ECMWF**, **NOAA GFS**, **DWD ICON**, **IMD Radar** |
-| **Database & Auth** | **Firebase Cloud Firestore**, **Firebase Authentication** |
-| **Notifications & Comms**| **Twilio WhatsApp Business REST API** |
-| **Progressive Web App** | **W3C Service Worker API**, **Cache Storage API**, Web App Manifest |
+```mermaid
+sequenceDiagram
+    participant User
+    participant UI as React PWA
+    participant Server as Express API
+    participant Providers as Weather, map and location providers
+    participant AI as Gemini or fallback model
 
----
+    User->>UI: Enter question, location, route, role and language
+    UI->>Server: Send structured request
+    Server->>Providers: Resolve location and fetch live data
+    Providers-->>Server: Weather, route and model context
+    Server->>Server: Calculate risk, impact and recommendation fields
+    Server->>AI: Send grounded context with strict output instructions
+    AI-->>Server: Localised explanation
+    Server-->>UI: Response, source metadata, risk and actions
+    UI-->>User: Show text, map, cards or spoken answer
+```
 
-## ⚙️ 6. Installation & Local Setup
+## Feature status
 
-### 6.1. Prerequisites
-- **Node.js**: v18.0.0 or later (v20+ recommended)
-- **npm**: v9.0.0 or later
-- **Google AI Studio API Key**: Required for Gemini capabilities ([Get key here](https://aistudio.google.com/))
+The table below keeps the README honest about what requires provider configuration.
 
-### 6.2. Clone & Install
+| Capability | Code path or provider | Status |
+|---|---|---|
+| Live current weather | `server.ts` and Open-Meteo | Implemented with cache and fallback handling |
+| Location search | Nominatim, Photon, Open-Meteo geocoding | Implemented with fallbacks |
+| Conversational assistant | `/api/chat`, Gemini and model cascade | Implemented; AI keys are required for full model responses |
+| Indian-language response prompts | `GLOBAL_LANGUAGE_PROMPT_MAP` | Implemented; output quality depends on the selected model |
+| NWP comparison endpoint | `/api/weather/nwp-models` | Implemented through Open-Meteo multi-model data |
+| Native WRF simulation | Separate WRF/WPS compute pipeline | Not currently implemented |
+| Route weather analysis | `/api/route/analyze` and trip services | Implemented where route/provider data is available |
+| Map display | Leaflet, MapLibre, CARTO configuration | Implemented; provider keys may be optional |
+| Firebase auth and Firestore | Firebase configuration files and client package | Available when Firebase is configured |
+| WhatsApp warnings | `server/twilioWhatsAppService.ts` | Optional; requires Twilio credentials and approved sender |
+| Offline PWA behaviour | `serviceWorker.ts`, cache storage, manifest | Implemented as a client capability; offline coverage should be tested per release |
+
+## Technology stack
+
+| Area | Technologies |
+|---|---|
+| Frontend | React 19, TypeScript, Vite 6 |
+| Styling and motion | Tailwind CSS v4, Motion, Lucide React |
+| Mapping | Leaflet, MapLibre GL, CARTO basemaps |
+| Backend | Node.js, Express 4, TypeScript, `tsx`, `ws` |
+| AI | `@google/genai`, Gemini 2.5 Flash, Gemini Live integration, optional Groq/OpenRouter/OpenAI cascade |
+| Weather | Open-Meteo current and forecast APIs, multi-model fields where available |
+| Geocoding | Nominatim, Photon, Open-Meteo geocoding fallback |
+| Persistence | Firebase Authentication and Cloud Firestore |
+| Messaging | Twilio WhatsApp Business API |
+| PWA | Service Worker API, Cache Storage API, Web App Manifest |
+
+## Repository structure
+
+```text
+weather-gpt--anmol/
+├── public/                         # Static assets and public app files
+├── src/
+│   ├── components/                 # Screens and reusable UI components
+│   ├── context/                    # Shared application state
+│   ├── data/                       # Static catalogues and application data
+│   ├── hooks/                      # Reusable React hooks
+│   ├── lib/                        # Firebase and shared libraries
+│   ├── services/                   # Weather, maps, NWP, trips, PWA, alerts
+│   ├── utils/                      # Browser and formatting helpers
+│   ├── App.tsx                     # Application shell and navigation
+│   ├── main.tsx                    # React entrypoint
+│   ├── index.css                   # Global styles
+│   └── types.ts                    # Shared TypeScript contracts
+├── server/
+│   ├── aiModelCascade.ts           # AI provider fallback orchestration
+│   └── twilioWhatsAppService.ts    # WhatsApp alert integration
+├── server.ts                       # Express server, API routes and WebSockets
+├── .env.example                    # Environment variable template
+├── firebase-applet-config.json     # Firebase app configuration
+├── firebase-blueprint.json         # Firebase project blueprint
+├── firestore.rules                 # Firestore access rules
+├── package.json                    # Scripts and dependencies
+└── README.md                       # Project documentation
+```
+
+## Local setup
+
+### Prerequisites
+
+- Node.js 20 or newer is recommended
+- npm 9 or newer
+- A Gemini API key for AI responses
+- Optional provider accounts for Firebase, CARTO, TravelTime, Twilio, Groq, OpenRouter, or OpenAI
+
+### Install and run
+
 ```bash
-# 1. Clone the repository
-git clone https://github.com/your-username/weather-gpt.git
-cd weather-gpt
-
-# 2. Install all dependencies
+git clone https://github.com/sk91-byte/weather-gpt--anmol.git
+cd weather-gpt--anmol
 npm install
 ```
 
-### 6.3. Environment Variables Configuration
-Copy the template environment file:
+Create a local environment file:
+
 ```bash
 cp .env.example .env
 ```
 
-Open `.env` and configure your keys:
-```ini
-# =======================================================
-# CORE AI ENGINE (MANDATORY)
-# =======================================================
-GEMINI_API_KEY="your-gemini-api-key"
+On Windows PowerShell:
 
-# =======================================================
-# GEOSPATIAL & MAPPING PROVIDERS (OPTIONAL / ENHANCED)
-# =======================================================
-CARTO_MAPS_API_KEY=""
-TRAVELTIME_APP_ID=""
-TRAVELTIME_API_KEY=""
-
-# =======================================================
-# TWILIO WHATSAPP AUTOMATED WEATHER ALERTS (OPTIONAL)
-# =======================================================
-TWILIO_ACCOUNT_SID=""
-TWILIO_AUTH_TOKEN=""
-TWILIO_WHATSAPP_FROM="whatsapp:+14155238886"
-
-# =======================================================
-# MULTI-MODEL FALLBACK CASCADE (OPTIONAL)
-# =======================================================
-GROQ_API_KEY=""
-OPENROUTER_API_KEY=""
-OPENAI_API_KEY=""
+```powershell
+Copy-Item .env.example .env
 ```
 
-### 6.4. Run the Development Server
+Add the required values to `.env`, then start the development server:
+
 ```bash
 npm run dev
 ```
-The application will launch on **`http://localhost:3000`**.
 
-### 6.5. Production Build
+Open [http://localhost:3000](http://localhost:3000).
+
+### Production build
+
 ```bash
+npm run lint
 npm run build
 npm start
 ```
 
----
+The `build` script creates the Vite frontend bundle and bundles the server entrypoint into `dist/server.cjs`.
 
-## 📡 7. API Documentation (Key Endpoints)
+## Environment variables
 
-### 7.1. Conversational AI Chat (`POST /api/chat`)
-Generates context-grounded, role-specific weather insights.
+Copy `.env.example` and configure only the providers you intend to use.
 
-**Request:**
-```json
-POST /api/chat
-Content-Type: application/json
+| Variable | Purpose | Required |
+|---|---|---|
+| `GEMINI_API_KEY` | Gemini chat, grounding, and voice-related capabilities | Required for full AI functionality |
+| `APP_URL` | Public application URL used for hosted callbacks and links | Required in hosted deployments |
+| `CARTO_MAPS_API_KEY` | CARTO map resources where the selected map configuration needs it | Optional |
+| `TRAVELTIME_APP_ID` | TravelTime geospatial routing/search integration | Optional |
+| `TRAVELTIME_API_KEY` | TravelTime authentication | Optional |
+| `TWILIO_ACCOUNT_SID` | Twilio account identity | Optional |
+| `TWILIO_AUTH_TOKEN` | Twilio server credential | Optional |
+| `TWILIO_WHATSAPP_FROM` | Approved Twilio WhatsApp sender | Optional |
+| `TWILIO_CONTENT_SID` | Optional WhatsApp template identifier | Optional |
+| `GROQ_API_KEY` | Groq fallback model provider | Optional |
+| `OPENROUTER_API_KEY` | OpenRouter fallback provider | Optional |
+| `OPENAI_API_KEY` | OpenAI-compatible fallback provider | Optional |
+| `OPENAI_BASE_URL` | Custom OpenAI-compatible endpoint | Optional |
 
-{
-  "message": "Is it safe to apply fertilizer to my wheat crops today in Ludhiana?",
-  "city": "Ludhiana",
-  "userRole": "farmer",
-  "language": "hi",
-  "weatherContext": {
-    "temperature": 28,
-    "humidity": 82,
-    "rainProbability": 65,
-    "windSpeed": 18
-  }
-}
+Never commit `.env`, API keys, access tokens, or service-account files.
+
+## API surface
+
+The main server routes include:
+
+| Method | Endpoint | Purpose |
+|---|---|---|
+| `GET` | `/api/health` | Check server availability and AI configuration status |
+| `GET` | `/api/weather/current` | Return current weather for a location |
+| `GET` | `/api/weather/search-location` | Search and resolve an Indian location |
+| `GET` | `/api/weather/nwp-models` | Return cached multi-model forecast comparison data |
+| `POST` | `/api/chat` | Generate a grounded, role-aware weather response |
+| `POST` | `/api/route/analyze` | Analyse weather exposure along a route |
+| `POST` | `/api/route/best-time` | Compare departure windows |
+| `GET` | `/api/climate/history` | Request historical or climate context where supported |
+| `POST` | `/api/alerts/*` | Alert evaluation and delivery routes exposed by the server when configured |
+
+The alert route names are maintained in `server.ts` and the Twilio service module. Keep this table synchronized when adding or renaming an endpoint.
+
+The exact request and response contracts should be kept in sync with `server.ts` and the TypeScript types in `src/types.ts`.
+
+## Data credibility and limitations
+
+### What is live
+
+The application requests live weather and geocoding data from configured public providers. Provider status and timestamps should be displayed to users so they can distinguish a live response from a cached or unavailable response.
+
+### What requires credentials
+
+Gemini, Firebase, TravelTime, CARTO, Twilio, and fallback LLM providers require configuration. The application cannot claim that a provider is active when its credentials are missing or the request failed.
+
+### Important NWP clarification
+
+The current `/api/weather/nwp-models` implementation obtains GFS, ECMWF, ICON, and related model fields through the Open-Meteo multi-model API. Its WRF-labelled series is derived locally from available model values and heuristic adjustments. It is **not** the output of a native WRF/WPS run.
+
+For scientific or operational use, a future WRF integration should run WRF separately with real boundary conditions, store the resulting NetCDF output, and expose the run timestamp, domain, resolution, and provenance through the API.
+
+### AI safety boundary
+
+AI should explain structured provider data. It should not create official warnings, invent measurements, or replace IMD, NDMA, emergency services, or local authority instructions. Any fallback values used for development must be labelled clearly in the UI and API metadata.
+
+## Deployment
+
+The application is a Node.js/Express service that can be deployed to a Node-compatible platform such as Render, Railway, Fly.io, or a managed container service.
+
+Typical production commands:
+
+```bash
+npm ci
+npm run build
+npm start
 ```
 
-**Response (Status: 200 OK):**
-```json
-{
-  "reply": "लुधियाना में आज 65% बारिश और 82% आर्द्रता की संभावना है। यूरिया या तरल खाद का छिड़काव न करें, क्योंकि बारिश से खाद बह सकती है। कृपया 48 घंटे प्रतीक्षा करें।",
-  "modelUsed": "gemini-2.5-flash",
-  "riskLevel": "moderate",
-  "actionableSteps": [
-    "खाद छिड़काव 2 दिन के लिए स्थगित करें।",
-    "खेत में अतिरिक्त जल निकासी की व्यवस्था सुनिश्चित करें।",
-    "आगामी 48 घंटों में मौसम साफ होने पर ही कीटनाशक लगाएं।"
-  ]
-}
+Configure the environment variables in the hosting provider’s secret manager. Do not place private keys in frontend code or commit them to GitHub.
+
+Before a production release, verify:
+
+1. `GET /api/health` returns the expected status.
+2. The frontend can reach the deployed API origin.
+3. Live provider timestamps are current.
+4. Missing providers show “unavailable” rather than fabricated results.
+5. Twilio test delivery is disabled unless the sender and recipient flow is approved.
+6. Firebase rules allow only the intended authenticated operations.
+
+## Demo flow
+
+Use this sequence for a clear demonstration:
+
+```text
+Open WeatherGPT
+      ↓
+Choose or search a location
+      ↓
+Show current weather and forecast
+      ↓
+Ask a weather question in text
+      ↓
+Switch the language and ask a follow-up
+      ↓
+Demonstrate voice interaction
+      ↓
+Open a route and inspect weather checkpoints
+      ↓
+Compare NWP model summaries
+      ↓
+Show the departure-time recommendation
+      ↓
+Open route risk and nearby-place information
+      ↓
+Demonstrate an alert only when an official/configured source is available
 ```
 
----
+## Roadmap
 
-### 7.2. Dynamic Route Weather Analysis (`POST /api/route/analyze`)
-Samples weather checkpoints along driving corridors.
+### Near term
 
-**Request:**
-```json
-POST /api/route/analyze
-Content-Type: application/json
+- Add automated integration tests for every provider adapter.
+- Add explicit `source`, `is_live`, `is_cached`, and `is_demo` fields to every weather response.
+- Replace heuristic fallback values with clearly labelled unavailable states.
+- Add route-risk test fixtures for rain, fog, heat, and severe-weather cases.
+- Document Firebase authentication and Firestore security rules.
 
-{
-  "origin": "Delhi",
-  "destination": "Shimla",
-  "departureTime": "2026-09-22T06:00:00Z"
-}
-```
+### Research and production extensions
 
-**Response (Status: 200 OK):**
-```json
-{
-  "totalDistanceKm": 348,
-  "estimatedDurationHours": 6.8,
-  "overallRisk": "warning",
-  "checkpoints": [
-    { "name": "Delhi (Kashmere Gate)", "eta": "06:00 AM", "condition": "Clear", "temp": 24, "risk": "low" },
-    { "name": "Karnal", "eta": "08:15 AM", "condition": "Moderate Fog", "temp": 21, "risk": "moderate" },
-    { "name": "Kalka (Ghat Ascent)", "eta": "11:30 AM", "condition": "Heavy Rain", "temp": 16, "risk": "severe" },
-    { "name": "Shimla", "eta": "01:00 PM", "condition": "Thunderstorm", "temp": 13, "risk": "warning" }
-  ],
-  "smartRecommendation": "Delaying departure by 60 minutes reduces ghat-section rainfall exposure by 42%."
-}
-```
+- Run a real WRF/WPS regional forecast pipeline outside the web request path.
+- Add official IMD and NDMA alert adapters with source links and validity windows.
+- Add model-run provenance and forecast verification metrics.
+- Add low-connectivity and offline emergency guidance.
+- Add opt-in WhatsApp and push notifications with user-controlled thresholds.
+- Add consent, retention, and audit documentation for location and notification data.
 
----
+## References
 
-## 🎯 8. Use Cases & Societal Impact
+- [Open-Meteo API documentation](https://open-meteo.com/en/docs)
+- [India Meteorological Department](https://mausam.imd.gov.in/)
+- [NDMA SACHET](https://sachet.ndma.gov.in/)
+- [Google Gemini API](https://ai.google.dev/gemini-api/docs)
+- [React](https://react.dev/)
+- [Vite](https://vite.dev/)
+- [Express](https://expressjs.com/)
+- [Leaflet](https://leafletjs.com/)
+- [MapLibre GL JS](https://maplibre.org/maplibre-gl-js/docs/)
+- [Firebase](https://firebase.google.com/docs)
+- [Twilio WhatsApp API](https://www.twilio.com/docs/whatsapp)
+- [WRF official repository](https://github.com/wrf-model/WRF) for future native regional modelling work
 
-| Target Demographic | Pain Point Addressed | Practical Outcome with Weather GPT |
-| :--- | :--- | :--- |
-| 🌾 **Smallholder Farmers** | Reliance on generic TV forecasts that lack micro-location and crop-specific timing. | Voice-based crop advisories in regional dialects directly advising on sowing, spraying, and harvest dates, preventing crop loss. |
-| 🚗 **Inter-City Commuters & Truckers** | Unforeseen highway flooding, landslides, or dense fog leading to accidents and freight delays. | Turn-by-turn route forecasts with departure delay recommendations to bypass peak storm windows. |
-| 🏙️ **Urban Citizens & Patients** | Respiratory health risks from sudden AQI spikes and extreme heatwaves in metropolitan areas. | Proactive automated WhatsApp alerts with personalized health safety measures based on PM2.5 and wet-bulb heat indices. |
-| ⛺ **Event Planners & Disaster Teams** | Static dashboards that do not explain model confidence or multi-hour weather shifts. | Ensemble model comparison (ECMWF vs GFS) providing clear statistical confidence for critical scheduling decisions. |
+## Team and license
 
----
+**Team:** Add the final team name and member responsibilities here.
 
-## 🔮 9. Future Scope & Roadmap
+**Problem statement:** Smart India Hackathon 2026, WeatherGPT / conversational weather intelligence.
 
-- [ ] **Hyper-Local IoT Weather Station Telemetry**: Direct ingestion from low-cost LoRaWAN soil moisture and ambient temperature probes deployed in rural panchayats.
-- [ ] **Satellite Imagery Segmentation**: Real-time INSAT-3D/3DR satellite imagery interpretation using Gemini vision models to track convective storm cells.
-- [ ] **Offline Edge AI Inference**: On-device quantized SLM (Small Language Model) execution via WebGPU for complete connectivity independence.
-- [ ] **Two-Way Voice WhatsApp Bot**: Enabling farmers to send WhatsApp voice notes and receive audio advisories back in their native dialect.
+This repository is licensed under the Apache License 2.0. See [LICENSE](LICENSE).
 
----
+## Project vision
 
-## 👥 10. Team & Contributions
-
-**Team Name:** [Your Team Name]  
-**SIH 2026 Problem Statement:** #68 — AI-Powered Weather Intelligence & Climate Advisory  
-
-| Name | Role | Responsibilities | Contact |
-| :--- | :--- | :--- | :--- |
-| **Lead Developer** | Full-Stack & AI Architecture | React 19, Gemini SDK Integration, Route Intelligence | [GitHub](https://github.com/) |
-| **AI/ML Engineer** | Model Cascades & Grounding | Multi-model fallback, Search/Maps grounding, NLP prompts | [GitHub](https://github.com/) |
-| **Backend & Cloud Lead** | Express & Data Engineering | API Gateway, NWP Aggregator, Twilio WhatsApp, Firebase | [GitHub](https://github.com/) |
-| **UI/UX & Mobile Specialist** | Frontend & PWA | Tailwind CSS v4 design system, Leaflet/MapLibre map rendering, PWA | [GitHub](https://github.com/) |
-
----
-
-## 📄 License
-This project is licensed under the **Apache License 2.0** — see the [LICENSE](LICENSE) file for details.
+> Make weather intelligence understandable, verifiable, multilingual, and actionable for every user.
