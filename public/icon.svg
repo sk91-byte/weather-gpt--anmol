@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Background Gradient (Vibrant Royal Azure Blue) -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0f67fa"/>
+      <stop offset="50%" stop-color="#095be5"/>
+      <stop offset="100%" stop-color="#0045c7"/>
+    </linearGradient>
+
+    <!-- Top Left Subtle Sky Highlight -->
+    <radialGradient id="topAura" cx="25%" cy="18%" r="65%">
+      <stop offset="0%" stop-color="#408dff" stop-opacity="0.32"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Bottom Rim Light -->
+    <radialGradient id="bottomRim" cx="50%" cy="100%" r="55%">
+      <stop offset="0%" stop-color="#0095ff" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#0045c7" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Sun Radial Gradient -->
+    <radialGradient id="sunGrad" cx="36%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#ffeb60"/>
+      <stop offset="50%" stop-color="#ffa800"/>
+      <stop offset="100%" stop-color="#f57c00"/>
+    </radialGradient>
+
+    <!-- Sun Ambient Glow Filter -->
+    <filter id="sunAura" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Cloud Drop Shadow Filter -->
+    <filter id="cloudShadow" x="-25%" y="-20%" width="150%" height="155%">
+      <feDropShadow dx="0" dy="18" stdDeviation="16" flood-color="#021a5a" flood-opacity="0.35"/>
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#04226f" flood-opacity="0.18"/>
+    </filter>
+
+    <!-- Cloud Shading Gradient -->
+    <linearGradient id="cloudGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="75%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#eef3f9"/>
+    </linearGradient>
+
+    <!-- Pin Royal Blue Gradient -->
+    <linearGradient id="pinGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0f64ee"/>
+      <stop offset="100%" stop-color="#024dc6"/>
+    </linearGradient>
+
+    <!-- Pin Inner Drop Shadow -->
+    <filter id="pinShadow" x="-25%" y="-25%" width="150%" height="150%">
+      <feDropShadow dx="0" dy="5" stdDeviation="6" flood-color="#062e7f" flood-opacity="0.28"/>
+    </filter>
+  </defs>
+
+  <!-- 1. Squircle App Icon Base (Standard iOS Corner Radius: 115) -->
+  <rect width="512" height="512" rx="115" ry="115" fill="url(#bgGrad)"/>
+  <rect width="512" height="512" rx="115" ry="115" fill="url(#topAura)"/>
+  <rect width="512" height="512" rx="115" ry="115" fill="url(#bottomRim)"/>
+
+  <!-- 2. Radiant Golden Sun (Upper-Right behind cloud) -->
+  <circle cx="348" cy="186" r="80" fill="url(#sunGrad)" filter="url(#sunAura)"/>
+
+  <!-- 3. Integrated White Cloud & Pin Base -->
+  <g filter="url(#cloudShadow)">
+    <path d="
+      M 194 220
+      A 86 86 0 0 1 334 214
+      A 72 72 0 0 1 406 286
+      C 406 326 376 348 334 348
+      C 304 348 290 354 274 374
+      L 265 388
+      A 14 14 0 0 1 247 388
+      L 238 374
+      C 222 354 208 348 178 348
+      C 134 348 106 322 106 286
+      A 72 72 0 0 1 194 220
+      Z
+    " fill="url(#cloudGrad)"/>
+  </g>
+
+  <!-- 4. The Blue Location Pin (Centered at bottom of the cloud) -->
+  <g filter="url(#pinShadow)">
+    <!-- Pin Body (Teardrop shape pointing down) -->
+    <path d="
+      M 256 384
+      C 246 370 205 332 205 306
+      A 51 51 0 1 1 307 306
+      C 307 332 266 370 256 384
+      Z
+    " fill="url(#pinGrad)"/>
+
+    <!-- White Inner Hole Cutout -->
+    <circle cx="256" cy="306" r="26" fill="#ffffff"/>
+  </g>
+</svg>

@@ -1,0 +1,105 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile with preferences and personal defaults",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "preferredVehicle": { "type": "string" },
+        "safetyPreference": { "type": "string" },
+        "defaultOrigin": { "type": "string" },
+        "defaultDestination": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["userId", "email"]
+    },
+    "SavedTrip": {
+      "title": "SavedTrip",
+      "description": "A saved commute route with meteorological safety metrics",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "fromName": { "type": "string" },
+        "toName": { "type": "string" },
+        "selectedMode": { "type": "string" },
+        "safetyScore": { "type": "number" },
+        "weatherSummary": { "type": "string" },
+        "notes": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "userId", "fromName", "toName"]
+    },
+    "ChatThread": {
+      "title": "ChatThread",
+      "description": "Conversation thread with role and model selection",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "title": { "type": "string" },
+        "model": { "type": "string" },
+        "role": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "userId", "title"]
+    },
+    "ChatMessage": {
+      "title": "ChatMessage",
+      "description": "A single message in a chat thread",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "threadId": { "type": "string" },
+        "userId": { "type": "string" },
+        "role": { "type": "string" },
+        "text": { "type": "string" },
+        "modelUsed": { "type": "string" },
+        "groundingSources": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "userId", "role", "text"]
+    },
+    "AudioTranscription": {
+      "title": "AudioTranscription",
+      "description": "Transcribed voice recording record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "text": { "type": "string" },
+        "durationSeconds": { "type": "number" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "userId", "text"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profile document"
+    },
+    "/users/{userId}/savedTrips/{tripId}": {
+      "schema": "SavedTrip",
+      "description": "User's saved commute trips and routes"
+    },
+    "/users/{userId}/chatThreads/{threadId}": {
+      "schema": "ChatThread",
+      "description": "User's multi-turn Gemini conversation threads"
+    },
+    "/users/{userId}/chatThreads/{threadId}/messages/{messageId}": {
+      "schema": "ChatMessage",
+      "description": "Messages inside a user's chat thread"
+    },
+    "/users/{userId}/transcriptions/{transcriptionId}": {
+      "schema": "AudioTranscription",
+      "description": "User's audio transcription history"
+    }
+  }
+}
